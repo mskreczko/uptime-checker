@@ -1,11 +1,16 @@
 package main
 
 import (
-	"fmt"
 	"github.com/mskreczko/uptime-checker/internal"
+	"github.com/mskreczko/uptime-checker/pkg"
 )
 
 func main() {
 	config := internal.ReadConfig("./config.yaml")
-	fmt.Printf("%+v\n", config)
+
+	for _, application := range config.Applications {
+		for _, targetGroup := range application.TargetGroups {
+			job := pkg.CreateHealthCheckJob(targetGroup.Targets, targetGroup.HealthcheckInterval)
+		}
+	}
 }

@@ -6,10 +6,7 @@ type Application struct {
 }
 
 type TargetGroup struct {
-	Name    string   `yaml:"name"`
-	Targets []string `yaml:"targets"`
+	Name                string   `yaml:"name"`
+	Targets             []string `yaml:"targets"`
+	HealthcheckInterval int      `yaml:"healthCheckInterval"`
 }
-
-// type Target struct {
-// 	HealtcheckUrl string
-// }

@@ -5,6 +5,7 @@ applications:
         targets:
           - http://localhost:3000/health
           - http://localhost:3001/health
+        healthcheckInterval: 3600
 
 notifications:
   notification_settings:
