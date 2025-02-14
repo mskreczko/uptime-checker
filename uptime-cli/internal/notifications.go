@@ -1,8 +1,12 @@
 package internal
 
-const NotificationChannel (
-	SMS
-	EMAIL
+import "gopkg.in/yaml.v3"
+
+type NotificationChannel string
+
+const (
+	SMS   NotificationChannel = "SMS"
+	EMAIL                     = "EMAIL"
 )
 
 type NotificationSettings struct {
@@ -10,14 +14,21 @@ type NotificationSettings struct {
 }
 
 type NotificationSettingEntry struct {
-	Channel NotificationChannel `yaml:"channel"`
-	Receivers []string `yaml:"receivers`
+	Channel   NotificationChannel `yaml:"channel"`
+	Receivers []string            `yaml:"receivers"`
 }
 
-func validateEmail(email string) bool {
+func (v *NotificationChannel) UnmarshalYAML(value *yaml.Node) error {
+	var strValue string
+	if err := value.Decode(&strValue); err != nil {
+		return err
+	}
 
-}
-
-func validatePhoneNumber(phoneNumber string) bool {
-
+	switch strValue {
+	case "EMAIL":
+		*v = EMAIL
+	case "SMS":
+		*v = SMS
+	}
+	return nil
 }

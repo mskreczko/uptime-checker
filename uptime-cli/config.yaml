@@ -1,0 +1,14 @@
+applications:
+  - name: test
+    targetGroups:
+      - name: group1
+        targets:
+          - http://localhost:3000/health
+          - http://localhost:3001/health
+
+notifications:
+  notification_settings:
+    - channel: EMAIL
+      receivers:
+        - test@test.com
+        - test2@test.com
