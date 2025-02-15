@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"fmt"
+	"github.com/mskreczko/uptime-checker/internal"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -14,11 +15,11 @@ type TargetGroupHealthcheckJob struct {
 }
 
 type Healthcheck struct {
-	url    url.URL
+	url    internal.YamlURL
 	lastUp time.Time
 }
 
-func CreateHealthCheckJob(urls []url.URL, interval int) TargetGroupHealthcheckJob {
+func CreateHealthCheckJob(urls []internal.YamlURL, interval int) TargetGroupHealthcheckJob {
 	var healthchecks []Healthcheck
 
 	for _, _url := range urls {
@@ -28,12 +29,19 @@ func CreateHealthCheckJob(urls []url.URL, interval int) TargetGroupHealthcheckJo
 	return TargetGroupHealthcheckJob{healthchecks, interval}
 }
 
-func (job TargetGroupHealthcheckJob) Run() {
-	for range time.Tick(time.Duration(job.Interval) * time.Second) {
+func (job *TargetGroupHealthcheckJob) Run() {
+	ticker := time.NewTicker(time.Duration(job.Interval) * time.Second)
+	defer ticker.Stop()
+
+	for range ticker.C {
 		for _, healthcheck := range job.Healthchecks {
-			if makeRequest(healthcheck.url) {
+			if makeRequest(*healthcheck.url.URL) {
 				healthcheck.lastUp = time.Now()
+			} else {
+				// TODO
+				// Handle notification if service is down for too long
 			}
+			fmt.Printf("Healthcheck URL: %s, Last up: %s\n", healthcheck.url, healthcheck.lastUp.Format(time.RFC3339))
 		}
 	}
 }
@@ -46,7 +54,7 @@ func makeRequest(url url.URL) bool {
 	}
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
-	if string(body) == "{\"status\": \"UP\"" {
+	if string(body) == "{\"status\": \"UP\"}" {
 		return true
 	}
 	return false

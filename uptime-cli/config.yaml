@@ -3,9 +3,9 @@ applications:
     targetGroups:
       - name: group1
         targets:
-          - http://localhost:3000/health
-          - http://localhost:3001/health
-        healthcheckInterval: 3600
+          - http://localhost:8000/health
+          - http://localhost:8001/health
+        healthCheckInterval: 10
 
 notifications:
   notification_settings:
