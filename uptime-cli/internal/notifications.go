@@ -1,6 +1,9 @@
 package internal
 
-import "gopkg.in/yaml.v3"
+import (
+	"github.com/mskreczko/uptime-checker/pkg"
+	"gopkg.in/yaml.v3"
+)
 
 type NotificationChannel string
 
@@ -31,4 +34,12 @@ func (v *NotificationChannel) UnmarshalYAML(value *yaml.Node) error {
 		*v = SMS
 	}
 	return nil
+}
+
+type NotificationService struct {
+	smtpClient pkg.SMTPClient
+}
+
+func (s *NotificationService) sendNotifications() {
+
 }
