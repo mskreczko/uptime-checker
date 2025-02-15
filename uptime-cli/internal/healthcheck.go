@@ -1,8 +1,7 @@
-package pkg
+package internal
 
 import (
 	"fmt"
-	"github.com/mskreczko/uptime-checker/internal"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -15,11 +14,11 @@ type TargetGroupHealthcheckJob struct {
 }
 
 type Healthcheck struct {
-	url    internal.YamlURL
+	url    YamlURL
 	lastUp time.Time
 }
 
-func CreateHealthCheckJob(urls []internal.YamlURL, interval int) TargetGroupHealthcheckJob {
+func CreateHealthCheckJob(urls []YamlURL, interval int) TargetGroupHealthcheckJob {
 	var healthchecks []Healthcheck
 
 	for _, _url := range urls {

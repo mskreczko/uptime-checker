@@ -6,7 +6,7 @@ import (
 )
 
 type Config struct {
-	Applications []Application `yaml:"applications"`	
+	Applications         []Application        `yaml:"applications"`
 	NotificationSettings NotificationSettings `yaml:"notifications"`
 }
 

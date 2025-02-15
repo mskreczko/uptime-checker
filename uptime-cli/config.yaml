@@ -13,3 +13,8 @@ notifications:
       receivers:
         - test@test.com
         - test2@test.com
+
+smtp:
+  server:
+  user:
+  password:
