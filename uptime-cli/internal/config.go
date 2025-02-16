@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"github.com/mskreczko/uptime-checker/pkg"
 	"gopkg.in/yaml.v3"
 	"os"
 )
@@ -8,6 +9,7 @@ import (
 type Config struct {
 	Applications         []Application        `yaml:"applications"`
 	NotificationSettings NotificationSettings `yaml:"notifications"`
+	SMTPSettings         pkg.SMTPConfig       `yaml:"smtp"`
 }
 
 func ReadConfig(configPath string) Config {

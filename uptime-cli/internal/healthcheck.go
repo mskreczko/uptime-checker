@@ -2,7 +2,7 @@ package internal
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"time"
@@ -36,11 +36,7 @@ func (job *TargetGroupHealthcheckJob) Run() {
 		for _, healthcheck := range job.Healthchecks {
 			if makeRequest(*healthcheck.url.URL) {
 				healthcheck.lastUp = time.Now()
-			} else {
-				// TODO
-				// Handle notification if service is down for too long
 			}
-			fmt.Printf("Healthcheck URL: %s, Last up: %s\n", healthcheck.url, healthcheck.lastUp.Format(time.RFC3339))
 		}
 	}
 }
@@ -52,7 +48,7 @@ func makeRequest(url url.URL) bool {
 		return false
 	}
 	defer res.Body.Close()
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	if string(body) == "{\"status\": \"UP\"}" {
 		return true
 	}

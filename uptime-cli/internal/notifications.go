@@ -40,6 +40,12 @@ type NotificationService struct {
 	smtpClient pkg.SMTPClient
 }
 
-func (s *NotificationService) sendNotifications() {
+func NewNotificationService(smtpClient pkg.SMTPClient) *NotificationService {
+	return &NotificationService{
+		smtpClient: smtpClient,
+	}
+}
 
+func (s *NotificationService) SendNotifications(request pkg.EmailRequest) {
+	s.smtpClient.SendEmail(request)
 }
