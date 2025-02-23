@@ -37,10 +37,10 @@ func (v *NotificationChannel) UnmarshalYAML(value *yaml.Node) error {
 }
 
 type NotificationService struct {
-	smtpClient pkg.SMTPClient
+	smtpClient pkg.AWSSesClient
 }
 
-func NewNotificationService(smtpClient pkg.SMTPClient) *NotificationService {
+func NewNotificationService(smtpClient pkg.AWSSesClient) *NotificationService {
 	return &NotificationService{
 		smtpClient: smtpClient,
 	}

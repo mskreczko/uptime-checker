@@ -9,7 +9,7 @@ import (
 type Config struct {
 	Applications         []Application        `yaml:"applications"`
 	NotificationSettings NotificationSettings `yaml:"notifications"`
-	SMTPSettings         pkg.SMTPConfig       `yaml:"smtp"`
+	SMTPSettings         pkg.AWSSesClient     `yaml:"smtp"`
 }
 
 func ReadConfig(configPath string) Config {

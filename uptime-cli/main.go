@@ -2,13 +2,12 @@ package main
 
 import (
 	"github.com/mskreczko/uptime-checker/internal"
-	"github.com/mskreczko/uptime-checker/pkg"
 	"sync"
 )
 
 func main() {
 	config := internal.ReadConfig("./config.yaml")
-	notificationService := internal.NewNotificationService(*pkg.NewSMTPClient(config.SMTPSettings))
+	notificationService := internal.NewNotificationService(config.SMTPSettings)
 
 	var wg sync.WaitGroup
 
