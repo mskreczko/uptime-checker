@@ -14,18 +14,24 @@ type TargetGroupHealthcheckJob struct {
 }
 
 type Healthcheck struct {
-	url    YamlURL
-	lastUp time.Time
+	Url    YamlURL
+	LastUp time.Time
 }
 
-func CreateHealthCheckJob(urls []YamlURL, interval int) TargetGroupHealthcheckJob {
+type HealthcheckService struct {
+	HealthcheckJobs []TargetGroupHealthcheckJob
+}
+
+func (hs *HealthcheckService) CreateHealthCheckJob(urls []YamlURL, interval int) TargetGroupHealthcheckJob {
 	var healthchecks []Healthcheck
 
 	for _, _url := range urls {
 		healthchecks = append(healthchecks, Healthcheck{_url, time.Now()})
 	}
 
-	return TargetGroupHealthcheckJob{healthchecks, interval}
+	job := TargetGroupHealthcheckJob{healthchecks, interval}
+	hs.HealthcheckJobs = append(hs.HealthcheckJobs, job)
+	return job
 }
 
 func (job *TargetGroupHealthcheckJob) Run() {
