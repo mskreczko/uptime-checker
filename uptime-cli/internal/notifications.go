@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"github.com/mskreczko/uptime-checker/pkg"
 	"gopkg.in/yaml.v3"
 )
@@ -38,6 +39,7 @@ func (v *NotificationChannel) UnmarshalYAML(value *yaml.Node) error {
 
 type NotificationService struct {
 	smtpClient pkg.AWSSesClient
+	config     NotificationSettings
 }
 
 func NewNotificationService(smtpClient pkg.AWSSesClient) *NotificationService {
@@ -48,4 +50,14 @@ func NewNotificationService(smtpClient pkg.AWSSesClient) *NotificationService {
 
 func (s *NotificationService) SendNotifications(request pkg.EmailRequest) {
 	s.smtpClient.SendEmail(request)
+}
+
+func (s *NotificationService) SendServicesDownNotification(failedHealthcheck Healthcheck) {
+	for _, receiver := range s.config.SettingEntries[0].Receivers {
+		s.smtpClient.SendEmail(pkg.EmailRequest{
+			To:      receiver,
+			Subject: fmt.Sprintf("%s is down", failedHealthcheck.Url),
+			Body:    fmt.Sprintf("%s is down, last successfull healthcheck: %s", failedHealthcheck.Url, failedHealthcheck.LastUp.String()),
+		})
+	}
 }

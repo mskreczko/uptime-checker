@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/mskreczko/uptime-checker/internal"
-	"github.com/mskreczko/uptime-checker/pkg"
 	"sync"
 	"time"
 )
@@ -29,13 +28,7 @@ func main() {
 	for _, job := range healthcheckService.HealthcheckJobs {
 		for _, healthcheck := range job.Healthchecks {
 			if time.Now().Sub(healthcheck.LastUp).Seconds() > float64(job.Interval) {
-				// TODO
-				// Extract it to notification service as more generic function
-				notificationService.SendNotifications(pkg.EmailRequest{
-					To:      config.NotificationSettings.SettingEntries[0].Receivers[0],
-					Subject: "One of your services is down",
-					Body:    "One of your services has not responded for healthcheck, last up: " + healthcheck.LastUp.String(),
-				})
+				notificationService.SendServicesDownNotification(healthcheck)
 			}
 		}
 	}
