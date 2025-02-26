@@ -14,6 +14,7 @@ type TargetGroup struct {
 	Name                string    `yaml:"name"`
 	Targets             []YamlURL `yaml:"targets"`
 	HealthcheckInterval int       `yaml:"healthCheckInterval"`
+	HealthCheckStrategy string    `yaml:"healthCheckStrategy"`
 }
 
 type YamlURL struct {

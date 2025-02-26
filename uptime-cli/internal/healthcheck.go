@@ -1,16 +1,13 @@
 package internal
 
 import (
-	"fmt"
-	"io"
-	"net/http"
-	"net/url"
 	"time"
 )
 
 type TargetGroupHealthcheckJob struct {
-	Healthchecks []Healthcheck
-	Interval     int
+	Healthchecks        []Healthcheck
+	Interval            int
+	HealthCheckStrategy HealthCheckStrategy
 }
 
 type Healthcheck struct {
@@ -22,14 +19,14 @@ type HealthcheckService struct {
 	HealthcheckJobs []TargetGroupHealthcheckJob
 }
 
-func (hs *HealthcheckService) CreateHealthCheckJob(urls []YamlURL, interval int) TargetGroupHealthcheckJob {
+func (hs *HealthcheckService) CreateHealthCheckJob(urls []YamlURL, interval int, healthCheckStrategy string) TargetGroupHealthcheckJob {
 	var healthchecks []Healthcheck
 
 	for _, _url := range urls {
 		healthchecks = append(healthchecks, Healthcheck{_url, time.Now()})
 	}
 
-	job := TargetGroupHealthcheckJob{healthchecks, interval}
+	job := TargetGroupHealthcheckJob{healthchecks, interval, ResolveHealthCheckStrategy(healthCheckStrategy)}
 	hs.HealthcheckJobs = append(hs.HealthcheckJobs, job)
 	return job
 }
@@ -40,23 +37,9 @@ func (job *TargetGroupHealthcheckJob) Run() {
 
 	for range ticker.C {
 		for _, healthcheck := range job.Healthchecks {
-			if makeRequest(*healthcheck.Url.URL) {
+			if job.HealthCheckStrategy.healthcheck(*healthcheck.Url.URL) {
 				healthcheck.LastUp = time.Now()
 			}
 		}
 	}
-}
-
-func makeRequest(url url.URL) bool {
-	res, err := http.Get(url.String())
-	if err != nil {
-		fmt.Printf("Error making request to %s: %s\n", url.String(), err)
-		return false
-	}
-	defer res.Body.Close()
-	body, err := io.ReadAll(res.Body)
-	if string(body) == "{\"status\": \"UP\"}" {
-		return true
-	}
-	return false
 }
