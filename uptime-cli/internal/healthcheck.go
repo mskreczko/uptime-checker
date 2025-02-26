@@ -40,8 +40,8 @@ func (job *TargetGroupHealthcheckJob) Run() {
 
 	for range ticker.C {
 		for _, healthcheck := range job.Healthchecks {
-			if makeRequest(*healthcheck.url.URL) {
-				healthcheck.lastUp = time.Now()
+			if makeRequest(*healthcheck.Url.URL) {
+				healthcheck.LastUp = time.Now()
 			}
 		}
 	}
