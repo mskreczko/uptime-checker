@@ -18,7 +18,7 @@ func main() {
 		for _, targetGroup := range application.TargetGroups {
 			wg.Add(1)
 			go func() {
-				job := healthcheckService.CreateHealthCheckJob(targetGroup.Targets, targetGroup.HealthcheckInterval)
+				job := healthcheckService.CreateHealthCheckJob(targetGroup.Targets, targetGroup.HealthcheckInterval, targetGroup.HealthCheckStrategy)
 				defer wg.Done()
 				job.Run()
 			}()
