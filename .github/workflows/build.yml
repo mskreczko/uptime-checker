@@ -10,6 +10,8 @@ jobs:
       run:
         working-directory: ./uptime-cli
     steps:
+      - uses: actions/checkout@v4
+
       - name: Build docker image
         run: docker build -t uptime-checker . --no-cache
 
