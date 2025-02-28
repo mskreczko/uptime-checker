@@ -1,0 +1,16 @@
+name: Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./uptime-cli
+    steps:
+      - name: Build docker image
+        uses: docker build -t uptime-checker . --no-cache
+
+
