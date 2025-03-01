@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	config := internal.ReadConfig("./config.yaml")
+	config := internal.ReadConfig("/config/config.yaml")
 	notificationService := internal.NewNotificationService(config.SMTPSettings)
 
 	var healthcheckService internal.HealthcheckService
