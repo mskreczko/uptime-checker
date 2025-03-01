@@ -25,5 +25,6 @@ jobs:
           push: true
           tags: ${{ secrets.REGISTRY_LOGIN_SERVER }}/uptime-checker:${{ github.sha }}
           file: ./uptime-cli/Dockerfile
+          context: ./uptime-cli
 
 
