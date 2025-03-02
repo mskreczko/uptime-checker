@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"github.com/mskreczko/uptime-checker/internal"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"net/http"
 	"sync"
 	"time"
 )
@@ -31,6 +34,12 @@ func main() {
 				notificationService.SendServicesDownNotification(healthcheck)
 			}
 		}
+	}
+
+	http.Handle("/metrics", promhttp.Handler())
+	err := http.ListenAndServe(fmt.Sprintf(":%d", config.ListeningPort), nil)
+	if err != nil {
+		return
 	}
 
 	wg.Wait()

@@ -39,6 +39,9 @@ func (job *TargetGroupHealthcheckJob) Run() {
 		for _, healthcheck := range job.Healthchecks {
 			if job.HealthCheckStrategy.healthcheck(*healthcheck.Url.URL) {
 				healthcheck.LastUp = time.Now()
+				TargetHealthMetric.WithLabelValues(healthcheck.Url.URL.String()).Set(1.0)
+			} else {
+				TargetHealthMetric.WithLabelValues(healthcheck.Url.URL.String()).Set(0.0)
 			}
 		}
 	}

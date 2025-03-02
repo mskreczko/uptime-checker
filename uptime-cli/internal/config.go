@@ -10,6 +10,7 @@ type Config struct {
 	Applications         []Application        `yaml:"applications"`
 	NotificationSettings NotificationSettings `yaml:"notifications"`
 	SMTPSettings         pkg.AWSSesClient     `yaml:"smtp"`
+	ListeningPort        int                  `yaml:"listening_port"`
 }
 
 func ReadConfig(configPath string) Config {
