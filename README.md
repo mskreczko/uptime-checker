@@ -1,8 +1,5 @@
-![tests]
-(https://github.com/mskreczko/uptime-checker/actions/workflows/tests.yml/badge.svg)
-
-![build]
-(https://github.com/mskreczko/uptime-checker/actions/workflows/build.yml/badge.svg)
+[![Tests](https://github.com/mskreczko/uptime-checker/actions/workflows/tests.yml/badge.svg)](https://github.com/mskreczko/uptime-checker/actions/workflows/tests.yml)
+[![Build](https://github.com/mskreczko/uptime-checker/actions/workflows/build.yml/badge.svg)](https://github.com/mskreczko/uptime-checker/actions/workflows/build.yml)
 
 # Uptime Checker
 
