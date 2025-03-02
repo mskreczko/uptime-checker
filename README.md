@@ -1,3 +1,9 @@
+![tests]
+(https://github.com/mskreczko/uptime-checker/actions/workflows/tests.yml/badge.svg)
+
+![build]
+(https://github.com/mskreczko/uptime-checker/actions/workflows/build.yml/badge.svg)
+
 # Uptime Checker
 
 CLI application that helps you monitor health of your services.
@@ -27,4 +33,6 @@ smtp:
   secret_key: 
   token:
   sender: uptimechecker@yourdomain.com
+
+listening_port: 9999
 ```
