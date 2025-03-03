@@ -23,6 +23,9 @@ notifications:
       receivers:
         - test@test.com
         - test2@test.com
+    - channel: WEBHOOK
+      receivers:
+        - http://localhost:3000/webhook
 
 smtp:
   region: us-east-1

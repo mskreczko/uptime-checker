@@ -9,8 +9,9 @@ import (
 type NotificationChannel string
 
 const (
-	SMS   NotificationChannel = "SMS"
-	EMAIL                     = "EMAIL"
+	SMS     NotificationChannel = "SMS"
+	EMAIL                       = "EMAIL"
+	WEBHOOK                     = "WEBHOOK"
 )
 
 type NotificationSettings struct {
@@ -33,6 +34,8 @@ func (v *NotificationChannel) UnmarshalYAML(value *yaml.Node) error {
 		*v = EMAIL
 	case "SMS":
 		*v = SMS
+	case "WEBHOOK":
+		*v = WEBHOOK
 	}
 	return nil
 }
