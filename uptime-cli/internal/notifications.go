@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/mskreczko/uptime-checker/pkg"
 	"gopkg.in/yaml.v3"
+	"log"
 )
 
 type NotificationChannel string
@@ -56,11 +57,41 @@ func (s *NotificationService) SendNotifications(request pkg.EmailRequest) {
 }
 
 func (s *NotificationService) SendServicesDownNotification(failedHealthcheck Healthcheck) {
+	for _, setting := range s.config.SettingEntries {
+		switch setting.Channel {
+		case EMAIL:
+			s.handleEmailNotifications(failedHealthcheck, setting)
+		case SMS:
+			s.handleSMSNotifications(failedHealthcheck, setting)
+		case WEBHOOK:
+			s.handleWebhookNotifications(failedHealthcheck, setting)
+		}
+	}
 	for _, receiver := range s.config.SettingEntries[0].Receivers {
 		s.smtpClient.SendEmail(pkg.EmailRequest{
 			To:      receiver,
 			Subject: fmt.Sprintf("%s is down", failedHealthcheck.Url),
 			Body:    fmt.Sprintf("%s is down, last successfull healthcheck: %s", failedHealthcheck.Url, failedHealthcheck.LastUp.String()),
 		})
+	}
+}
+
+func (s *NotificationService) handleEmailNotifications(failedHealthcheck Healthcheck, settings NotificationSettingEntry) {
+	for _, receiver := range settings.Receivers {
+		s.smtpClient.SendEmail(pkg.EmailRequest{
+			To:      receiver,
+			Subject: fmt.Sprintf("%s is down", failedHealthcheck.Url),
+			Body:    fmt.Sprintf("%s is down, last successfull healthcheck: %s", failedHealthcheck.Url, failedHealthcheck.LastUp.String()),
+		})
+	}
+}
+
+func (s *NotificationService) handleSMSNotifications(failedHealthcheck Healthcheck, settings NotificationSettingEntry) {
+	log.Println("SMS notifications are not yet implemented.")
+}
+
+func (s *NotificationService) handleWebhookNotifications(failedHealthcheck Healthcheck, settings NotificationSettingEntry) {
+	for _, receiver := range settings.Receivers {
+		pkg.SendNotificationToWebhook(receiver, fmt.Sprintf("%s is down, last successfull healthcheck: %s", failedHealthcheck.Url, failedHealthcheck.LastUp.String()))
 	}
 }
