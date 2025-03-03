@@ -67,13 +67,6 @@ func (s *NotificationService) SendServicesDownNotification(failedHealthcheck Hea
 			s.handleWebhookNotifications(failedHealthcheck, setting)
 		}
 	}
-	for _, receiver := range s.config.SettingEntries[0].Receivers {
-		s.smtpClient.SendEmail(pkg.EmailRequest{
-			To:      receiver,
-			Subject: fmt.Sprintf("%s is down", failedHealthcheck.Url),
-			Body:    fmt.Sprintf("%s is down, last successfull healthcheck: %s", failedHealthcheck.Url, failedHealthcheck.LastUp.String()),
-		})
-	}
 }
 
 func (s *NotificationService) handleEmailNotifications(failedHealthcheck Healthcheck, settings NotificationSettingEntry) {
