@@ -1,9 +1,11 @@
 package internal
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/mskreczko/uptime-checker/pkg"
 	"gopkg.in/yaml.v3"
+	"html/template"
 	"log"
 )
 
@@ -70,11 +72,17 @@ func (s *NotificationService) SendServicesDownNotification(failedHealthcheck Hea
 }
 
 func (s *NotificationService) handleEmailNotifications(failedHealthcheck Healthcheck, settings NotificationSettingEntry) {
+	t, _ := template.ParseFiles("templates/email_notifications.html")
+	var templ bytes.Buffer
+	if err := t.Execute(&templ, failedHealthcheck); err != nil {
+		log.Printf("failed to parse template: %s", err)
+		return
+	}
 	for _, receiver := range settings.Receivers {
 		s.smtpClient.SendEmail(pkg.EmailRequest{
 			To:      receiver,
 			Subject: fmt.Sprintf("%s is down", failedHealthcheck.Url),
-			Body:    fmt.Sprintf("%s is down, last successfull healthcheck: %s", failedHealthcheck.Url, failedHealthcheck.LastUp.String()),
+			Body:    templ.String(),
 		})
 	}
 }
@@ -85,6 +93,6 @@ func (s *NotificationService) handleSMSNotifications(failedHealthcheck Healthche
 
 func (s *NotificationService) handleWebhookNotifications(failedHealthcheck Healthcheck, settings NotificationSettingEntry) {
 	for _, receiver := range settings.Receivers {
-		pkg.SendNotificationToWebhook(receiver, fmt.Sprintf("%s is down, last successfull healthcheck: %s", failedHealthcheck.Url, failedHealthcheck.LastUp.String()))
+		pkg.SendNotificationToWebhook(receiver, fmt.Sprintf("%s is down, last successful healthcheck: %s", failedHealthcheck.Url, failedHealthcheck.LastUp.String()))
 	}
 }
