@@ -11,5 +11,5 @@ var (
 			Name: "target_health",
 			Help: "Current state of target (0 = down, 1 = up)",
 		},
-		[]string{})
+		[]string{"status"})
 )
