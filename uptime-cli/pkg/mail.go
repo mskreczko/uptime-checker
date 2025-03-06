@@ -52,7 +52,10 @@ func (c *AWSSesClient) SendEmail(request EmailRequest) {
 		Source: aws.String(c.Sender),
 	}
 
-	_, err = svc.SendEmail(input)
+	_, err = Retry(3, func() (interface{}, error) {
+		_, err = svc.SendEmail(input)
+		return err, nil
+	})
 	if err != nil {
 		fmt.Println(err.Error())
 	}
